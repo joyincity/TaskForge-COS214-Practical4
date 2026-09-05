@@ -3,15 +3,18 @@
 #include<iostream>
 #include <vector>
 #include <string>
-#include "TaskState.h"
+
+class TaskState;
+class WorkItemIterator;
 
 class ResponseWorkItem{
     
     public: 
-    virtual ~ResponseWorkItem();
+    virtual ~ResponseWorkItem(){};
      virtual void execute() =0;
      virtual void getStatus()=0;
-     virtual std::string getName() =0;
+     virtual std::string getName()const =0;
+     virtual WorkItemIterator* createIterator()=0;
 
 };
 class IncidentGroup: public ResponseWorkItem{
@@ -20,43 +23,54 @@ class IncidentGroup: public ResponseWorkItem{
      int teamSize;
 
     public:
-        IncidentGroup(std::string n);
-        IncidentGroup(std::string n, int ts);
+        IncidentGroup(const std::string& n);
+        IncidentGroup(const std::string& n, int ts);
         ~IncidentGroup();
         void add(ResponseWorkItem* item);
         void remove(ResponseWorkItem* item);
         void execute() override;
         void getStatus() override;
-        std::string getName() override;
+        std::string getName()const override;
+        WorkItemIterator* createIterator() override;
 
 
 
 };
-class FireTask: public ResponseWorkItem{
+class ResponseTask: public ResponseWorkItem{
     private:
-        TaskState* state;
+        TaskState* currrentState;
     public:
-        FireTask(std::string n);
-        ~FireTask();
+        virtual ~ResponseTask(){};
+        void setState(TaskState* state);
+        TaskState* getState();
+        void dispatch();
+        void beginOperation();
+        void complete();
         void execute() override;
         void getStatus() override;
-        std::string getName() override;
-        void setState(TaskState* state);
-        void getState();
-        void dispatchCrew();
-        void completeRescue();
+        std::string getName()const override;
+        WorkItemIterator* createIterator() override;
+    
+
 };
-class MedicalTask: public ResponseWorkItem{
-    MedicalTask(std::string n);
-    ~MedicalTask();
-    void execute() override;
-    void getStatus() override;
-    std::string getName() override;
-    void setState(TaskState* state);
-    void getState();
-    void assessPatient();
-    void stabilizePatient();
-    void transportPatient();
+class RescueTask: public ResponseTask{
+    
+    public:
+        RescueTask(const std::string& n);
+        ~RescueTask();
+        void execute() override;
+        void searchArea();
+        void extractVictim();
+};
+class MedicalTask: public ResponseTask{
+    public:
+
+        MedicalTask(const std::string& n);
+        ~MedicalTask();
+        void execute()override;
+        void assessPatient();
+        void stabilizePatient();
+        void transportPatient();
 
 };
 #endif
