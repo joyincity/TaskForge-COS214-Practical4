@@ -3,7 +3,7 @@
 
 #include <vector>
 
-class ResponseWorkItem;
+ class ResponseWorkItem;
 
 class WorkItemIterator{
     public:

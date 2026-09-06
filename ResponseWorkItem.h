@@ -6,6 +6,8 @@
 
 class TaskState;
 class WorkItemIterator;
+class FullOperationalSweepIterator;
+class MedicalPriorityIterator;
 
 class ResponseWorkItem{
     
@@ -18,7 +20,10 @@ class ResponseWorkItem{
 
 };
 class IncidentGroup: public ResponseWorkItem{
+   friend class FullOperationalSweepIterator;
+   friend class MedicalPriorityIterator;
     private:
+     std::string name;
      std::vector<ResponseWorkItem*> children;
      int teamSize;
 
@@ -38,8 +43,10 @@ class IncidentGroup: public ResponseWorkItem{
 };
 class ResponseTask: public ResponseWorkItem{
     private:
+        std::string name;
         TaskState* currrentState;
     public:
+        ResponseTask(const std::string& n);
         virtual ~ResponseTask(){};
         void setState(TaskState* state);
         TaskState* getState();
