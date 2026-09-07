@@ -17,6 +17,8 @@ class ResponseWorkItem{
      virtual void getStatus()=0;
      virtual std::string getName()const =0;
      virtual WorkItemIterator* createIterator()=0;
+     virtual void doFullSweep(FullOperationalSweepIterator* it);
+     virtual void doMedicalSweep(MedicalPriorityIterator*it);
 
 };
 class IncidentGroup: public ResponseWorkItem{
@@ -25,11 +27,11 @@ class IncidentGroup: public ResponseWorkItem{
     private:
      std::string name;
      std::vector<ResponseWorkItem*> children;
-     int teamSize;
+     
 
     public:
         IncidentGroup(const std::string& n);
-        IncidentGroup(const std::string& n, int ts);
+       
         ~IncidentGroup();
         void add(ResponseWorkItem* item);
         void remove(ResponseWorkItem* item);
@@ -37,6 +39,8 @@ class IncidentGroup: public ResponseWorkItem{
         void getStatus() override;
         std::string getName()const override;
         WorkItemIterator* createIterator() override;
+        virtual void doFullSweep(FullOperationalSweepIterator* it)override;
+     virtual void doMedicalSweep(MedicalPriorityIterator*it)override;
 
 
 
@@ -78,6 +82,7 @@ class MedicalTask: public ResponseTask{
         void assessPatient();
         void stabilizePatient();
         void transportPatient();
+     virtual void doMedicalSweep(MedicalPriorityIterator*it)override;
 
 };
 #endif

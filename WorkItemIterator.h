@@ -4,6 +4,8 @@
 #include <vector>
 
  class ResponseWorkItem;
+ class IncidentGroup;
+ class MedicalTask;
 
 class WorkItemIterator{
     public:
@@ -18,7 +20,8 @@ class WorkItemIterator{
 class FullOperationalSweepIterator: public WorkItemIterator{
     private:
         std::vector<ResponseWorkItem*> traversal;
-        int currentIndex;
+        std::size_t currentIndex;
+        
     public:
         FullOperationalSweepIterator(ResponseWorkItem* root);
         ~FullOperationalSweepIterator();
@@ -26,12 +29,16 @@ class FullOperationalSweepIterator: public WorkItemIterator{
         bool hasNext();
         void next();
         ResponseWorkItem* current();
+        void visitLeaf(ResponseWorkItem* leaf);
+        void visitGroup(IncidentGroup* group);
 
 };
 class MedicalPriorityIterator: public WorkItemIterator{
     private:
         std::vector<ResponseWorkItem*> priority;
-        int currentIndex;
+        std::size_t currentIndex;
+        
+        
 
     public:
         MedicalPriorityIterator(ResponseWorkItem* root);
@@ -40,6 +47,10 @@ class MedicalPriorityIterator: public WorkItemIterator{
         bool hasNext();
         void next();
         ResponseWorkItem* current();
+        void visitNonMedical(ResponseWorkItem* node);
+        void visitMedical(MedicalTask* task);
+        void visitGroup(IncidentGroup* group);
+        
 };
 
 #endif

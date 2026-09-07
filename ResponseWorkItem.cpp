@@ -1,13 +1,18 @@
 #include "ResponseWorkItem.h"
 #include "WorkItemIterator.h"
 
+
+void ResponseWorkItem:: doFullSweep(FullOperationalSweepIterator* it){
+    it->visitLeaf(this);
+}
+void ResponseWorkItem::doMedicalSweep(MedicalPriorityIterator*it){
+    it->visitNonMedical(this);
+}
+
  IncidentGroup::IncidentGroup(const std::string& n){
     name =n;
  }
-        IncidentGroup::IncidentGroup(const std::string& n, int ts){
-           name = n;
-            ts = teamSize;
-        }
+        
         IncidentGroup::~IncidentGroup(){
              std::vector<ResponseWorkItem*>:: iterator iterator;
     for(iterator = children.begin(); iterator!= children.end(); ++iterator){
@@ -29,6 +34,16 @@
 
         }
         void IncidentGroup:: execute() {
+            std::cout << "Executing Incident: " << name << std::endl;
+    
+    if (children.empty()) {
+        std::cout << "Nothing available to execute" << std::endl;
+        return;
+    }
+    std::vector<ResponseWorkItem*>::iterator iterator;
+    for (iterator = children.begin(); iterator != children.end(); ++iterator) {
+        (*iterator)->execute();
+    }
 
         }
         void IncidentGroup:: getStatus() {
@@ -53,12 +68,19 @@
         WorkItemIterator* IncidentGroup:: createIterator(){
             return new FullOperationalSweepIterator(this);
         }
+        void IncidentGroup:: doFullSweep(FullOperationalSweepIterator*it){
+            it->visitGroup(this);
+        }
+        void IncidentGroup:: doMedicalSweep(MedicalPriorityIterator* it){
+            it->visitGroup(this);
+        }
         ResponseTask::ResponseTask(const std::string& n){
             name =n;
         }
+       
+
         void ResponseTask:: setState(TaskState* state){
-            delete currrentState;
-            currrentState =state;
+          
         }
         TaskState* ResponseTask:: getState(){
             return currrentState;
@@ -73,10 +95,15 @@
 
         }
         void ResponseTask::  execute() {
+           
             
         }
         void ResponseTask:: getStatus(){
-
+            if (currrentState!=nullptr) {
+        std::cout << currrentState->getName();
+         } else {
+        std::cout << "status unkonwn";
+            }
         }
         std::string ResponseTask:: getName() const{
             return name;
@@ -117,4 +144,7 @@
         }
         void MedicalTask:: transportPatient(){
             std::cout<<"transporting patient"<<std::endl;
+        }
+        void MedicalTask::doMedicalSweep(MedicalPriorityIterator* it){
+            it->visitMedical(this);
         }
