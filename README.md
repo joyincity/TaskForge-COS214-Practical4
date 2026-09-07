@@ -2,6 +2,6 @@
 TaskForge is an emergency incident and task management developed in c++11.
 It demonstrates the 4 GoF patterns:Iterator, Composite, State and Decorator.
 
-#Buil and Run
+### Build and Run
 1. **Compile **
    make clean && make
