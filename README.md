@@ -1,6 +1,4 @@
-Here is an improved, professional `README.md` for your **TaskForge** practical. It uses clean Markdown scaffolding, clearly outlines your chosen emergency response domain, and documents all required GoF patterns, building instructions, and memory safety requirements for your tutors/evaluators.
 
----
 
 # TaskForge — Emergency Incident & Task Management System
 
